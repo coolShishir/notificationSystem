@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Notfication System</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <style>
+    * { margin: 0; padding: 10px; box-sizing: border-box; }
+    body { font: 13px Helvetica, Arial; }
+    #messages { list-style-type: none; margin: 0; padding: 0; }
+    #messages li { padding: 5px 10px; }
+    #messages li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+  <body>
+
+    <div ng-app="admin" ng-controller="orderController">
+      <h1>Adminstartion Look Up</h2>
+      <h1> User1 </h1>
+      <ul id="user1"></ul>
+      <br>
+      <h1> User2 </h1>
+      <ul id="user2"></ul>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+    
+    <script>
+          
+      var app = angular.module('admin',[]);
+      app.controller('orderController', function($scope,$http){
+        var socket = io();
+        socket.on('user1', function(doc){
+            $('#user1').append($('<li>').text(doc.text));
+        });
+
+        var socket = io();
+          socket.on('user2', function(doc){
+          $('#user2').append($('<li>').text(doc.text));
+        });
+      })
+
+    </script>
+  </body>
+</html>

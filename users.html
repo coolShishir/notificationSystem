@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Notfication System</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <style>
+    * { margin: 0; padding: 10px; box-sizing: border-box; }
+    body { font: 13px Helvetica, Arial; }
+    #messages { list-style-type: none; margin: 0; padding: 0; }
+    #messages li { padding: 5px 10px; }
+    #messages li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+  <body>
+
+    <div ng-app="users" ng-controller="userController">
+      <h2>Subscribe for Notification</h2>
+      <p>Enter User EmailId: <input type="text" ng-model="emailId"></p>
+      <p>Enter User Subscription: <input type="text" ng-model="subscription"></p>
+      <input type="button" class="btn btn-primary btn-lg" ng-click="subscribe()" value="subscribe">
+      <br>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
+
+    <script>
+
+        var app = angular.module('users',['ngRoute']);
+        
+        app.controller('userController', function($scope,$http){
+
+          $scope.subscribe = function(){
+            $scope.status['subscription'] = $scope.subscription;
+            $scope.status['emailId'] =  $scope.emailId;
+            var data2 = {
+              subscription: $scope.subscription,
+              emailId: $scope.emailId
+            };
+            console.log(data2);
+             $http({
+              method  : 'POST',
+              url     : 'http://127.0.0.1:3000/subscription/',
+              data    : data2, //forms user object
+              headers : {'Content-Type': 'application/json'} 
+             })
+              .success(function(data) {
+                if (data.errors) {
+                  console.log("success");
+                } else {
+                  console.log("failue")
+                }
+            });
+          }
+        });
+
+    </script>
+
+  </body>
+</html>
