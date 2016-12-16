@@ -18,7 +18,7 @@ var transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
             user: 'jainshishir18@gmail.com', // admin email id
-            pass: '*******' // admin password
+            pass: 'StrangeDoctor!' // admin password
   }
 });
    
@@ -88,14 +88,6 @@ app.post('/dbUpdate', function (req, res) {
 
 mongo.MongoClient.connect (mongodbUri, function (err, db) {
 
-  var userIdList = {}
-  var collection = db.collection('users')
-  var userList  = collection.find( {} ).each(function(err, doc) {
-   if ( doc != null ) {
-    console.log(doc.emailId)
-    }
-  })
-
   db.collection('messages', function(err, collection) {
     // open socket
     io.sockets.on("connection", function (socket) {
@@ -103,46 +95,33 @@ mongo.MongoClient.connect (mongodbUri, function (err, db) {
       console.log("== open tailable cursor");
       collection.find({}, {tailable:true, awaitdata:true, numberOfRetries:-1}).each(function(err, doc) {
         // send message to client
-        if (doc.type == "message1" || doc.type == "message3"  ) {
-          socket.emit("user1",doc);
-          var text = "temp";
-          var mailOptions = {
-            from: 'jainshishir18@gmail.com', // sender address
-            to: 'rit2012058@iiita.ac.in', // list of receivers 
-            subject: 'Email Example', // Subject line
-            text: text //, // plaintext body
-          };
+         var x  = doc.type
+         var y = doc.text
+         var temp = doc
 
-          transporter.sendMail(mailOptions, function(error, info){
-          if(error){
-            console.log(error);
-            } else{
-            console.log('Message sent: ' + info.response);
-            };
-          });
-        }
-        
-        if (doc.type == 'message2') {
-          socket.emit("user2",doc);
-          var text = "temp";
-            
+        db.collection('users').find({"subscription":x}).toArray(function(err, docs) {
+          docs.forEach(function(doc) {
+            console.log(doc.emailId)
+            socket.emit("user1",doc);
             var mailOptions = {
               from: 'jainshishir18@gmail.com', // sender address
-              to: 'shishir.j@quantinsti.com', // list of receivers
+              to: doc.emailId, // list of receivers 
               subject: 'Email Example', // Subject line
-              text: text //, // plaintext body
+              text: y //, // plaintext body
             };
-          
-          transporter.sendMail(mailOptions, function(error, info){
-          
+
+            transporter.sendMail(mailOptions, function(error, info){
             if(error){
               console.log(error);
-             } else{
+              } else{
               console.log('Message sent: ' + info.response);
-            };
+              };
+            });
+            
           });
-        }
+        });
+
+        })
       });
     });
   });
-});
