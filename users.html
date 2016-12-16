@@ -13,11 +13,14 @@
     </style>
   </head>
   <body>
-
     <div ng-app="users" ng-controller="userController">
       <h2>Subscribe for Notification</h2>
       <p>Enter User EmailId: <input type="text" ng-model="emailId"></p>
-      <p>Enter User Subscription: <input type="text" ng-model="subscription"></p>
+      <p>Select User Subscription: 
+        <select ng-model="subscription">
+        <option ng-repeat="list in lists" value="{{list.name}}">{{list.name}}</option>
+        </select>
+      </p>
       <input type="button" class="btn btn-primary btn-lg" ng-click="subscribe()" value="subscribe">
       <br>
     </div>
@@ -34,10 +37,9 @@
         var app = angular.module('users',['ngRoute']);
         
         app.controller('userController', function($scope,$http){
+          $scope.lists= [{name: "Times of India"},{name: "Hindustan Times"},{name: "India Today"},{name: "Economic Times"}]
 
           $scope.subscribe = function(){
-            $scope.status['subscription'] = $scope.subscription;
-            $scope.status['emailId'] =  $scope.emailId;
             var data2 = {
               subscription: $scope.subscription,
               emailId: $scope.emailId
