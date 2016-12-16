@@ -16,11 +16,8 @@
 
     <div ng-app="admin" ng-controller="orderController">
       <h1>Adminstartion Look Up</h2>
-      <h1> User1 </h1>
+      <h2> Users receiving notifications </h2>
       <ul id="user1"></ul>
-      <br>
-      <h1> User2 </h1>
-      <ul id="user2"></ul>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -35,12 +32,7 @@
       app.controller('orderController', function($scope,$http){
         var socket = io();
         socket.on('user1', function(doc){
-            $('#user1').append($('<li>').text(doc.text));
-        });
-
-        var socket = io();
-          socket.on('user2', function(doc){
-          $('#user2').append($('<li>').text(doc.text));
+            $('#user1').append($('<li>').text(doc.emailId));
         });
       })
 
