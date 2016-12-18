@@ -1,19 +1,22 @@
+// This file does entire backEnd handling of the code . 
 "use strict";
 
-var nodemailer = require('nodemailer');
-var express = require('express');
-var app = express();
+// declarig and importing node and  express modules for various tasks 
+var nodemailer = require('nodemailer');  // module for sending mail
+var express = require('express');  // module for express library
+var app = express(); 
 var assert = require('assert');
-var ObjectId = require('mongodb').ObjectID;
+var ObjectId = require('mongodb').ObjectID; // module for mongodb
 var mongo = require("mongodb"),
     fs = require("fs"),         // to read static files
     http = require("http");
-var bodyParser = require("body-parser");
+var bodyParser = require("body-parser");  // module for text parsing
 
 app.use(bodyParser());
 
-var mongodbUri = "mongodb://127.0.0.1/chat";
+var mongodbUri = "mongodb://127.0.0.1/chat"; // establing monoDb connection
 
+// setting mail sent transporter
 var transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
@@ -22,6 +25,7 @@ var transporter = nodemailer.createTransport({
   }
 });
    
+// for handling web page access restrictions done by browser for security     
 app.use(function(req, res, next) {
     if (req.headers.origin) {
         res.header('Access-Control-Allow-Origin', '*')
@@ -32,15 +36,18 @@ app.use(function(req, res, next) {
     next()
 })
 
+// creating server
 var server = app.listen(3000, function () {
   var host = server.address().address
   console.log(host)
   var port = server.address().port
   console.log("app listening at http://@%s:%s", host, port);
 });
+
+//creating socket for continuos connection 
 var io = require('socket.io')(server);
 
-
+//routing 
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
 });
@@ -53,6 +60,7 @@ app.get('/users', function(req, res){
     res.sendFile(__dirname + '/users.html');
 });
 
+//for modifying a subscription
 app.put('/subscriptionModification', function (req, res) { 
   mongo.MongoClient.connect(mongodbUri, function(err, db) {
   assert.equal(null, err);
@@ -64,6 +72,7 @@ app.put('/subscriptionModification', function (req, res) {
   });
 });
 
+//inserts user subscription details in db 
 app.post('/subscription', function (req, res) {	
   mongo.MongoClient.connect(mongodbUri, function(err, db) {
   assert.equal(null, err);
@@ -75,17 +84,7 @@ app.post('/subscription', function (req, res) {
   });
 });
 
-app.post('/dbUpdate', function (req, res) { 
-  mongo.MongoClient.connect(mongodbUri, function(err, db) {
-  assert.equal(null, err);
-  db.collection('messages').insertOne( req.body ,
-    function(err, result) {
-    assert.equal(err, null);
-    console.log("Inserted a document into the users collection.");
-    });
-  });
-});
-
+// MongoDb CLient Connection 
 mongo.MongoClient.connect (mongodbUri, function (err, db) {
 
   db.collection('messages', function(err, collection) {
