@@ -28,36 +28,9 @@
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
 
-    <script>
+    <script src="myjs.js"</script>
 
-        var app = angular.module('myApp',['ngRoute']);
-        
-        app.config(function($routeProvider) {
-        $routeProvider
-          .when("/", {
-          templateUrl : 'index.html'
-          })
-          .when("/admin", {
-          templateUrl : 'admin.html'
-          })
-          .when("/users",{
-            templateUrl : 'users.html'
-          })
-        });
-        
-        app.controller('mainController', function($scope,$http){
-
-          $scope.admin = function(){
-            window.location = "http://localhost:3000/admin"
-          }
-
-          $scope.users = function(){
-            window.location = "http://localhost:3000/users"
-          }
-
-        });
-
-    </script>
+   
 
   </body>
 </html>
